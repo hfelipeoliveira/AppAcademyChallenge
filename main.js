@@ -17,6 +17,27 @@ function conersorParaArray(str){
       return arr;
 }
 
+ //  Função para exibir os resultados na lista
+function addResultados(str){
+    var resultados = document.getElementById("resultados").innerHTML;
+    document.getElementById("resultados").innerHTML = resultados + "<li>"+ str + "</li>";
+}
+
+//  Quem é o professor de Android
+function quemEOProfessor(item){
+    if (item.Vaga != 'Android' && item.Estado == 'SC'){
+        var idadeProfessor = Number(item.Idade.replace(" anos", ""));
+        if(idadeProfessor <= 31 && idadeProfessor >= 21 && (idadeProfessor % 2 == 1)){
+            var partesDoNome = item.Nome.split(" ");
+            if(partesDoNome[0].slice(-1) == "o" && partesDoNome[0].match(/[aeiouy]/gi).length == 3){
+                const resultadoProfessor = "O profesor para a turma de Android é o " + item.Nome;
+                console.log(resultadoProfessor);
+                addResultados(resultadoProfessor);
+            }
+        }
+    }
+}
+
 // Capta o CSV
 formulario.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -47,14 +68,11 @@ formulario.addEventListener("submit", function (e) {
                     uf[item.Estado] = 0;
                 }
                 uf[item.Estado]++;
+
+                quemEOProfessor(item);
             }
         });
 
-        //  Função para exibir os resultados na lista
-        function addResultados(str){
-            var resultados = document.getElementById("resultados").innerHTML;
-            document.getElementById("resultados").innerHTML = resultados + "<li>"+ str + "</li>";
-        }
 
         //  Porcetaguem em cada curso
         for (var prop in curso) {
@@ -96,8 +114,8 @@ formulario.addEventListener("submit", function (e) {
 
 
         // Okay, são 23:27 do dia 21, não vai dar tempo...
-        // Mas vou terminar mesmo assim e deixar no meu Giihub caso queira ver
-        // 
+        // Mas esta ficando muito legal, vou terminar mesmo assim e deixar no meu Github caso queira ver
+        // https://github.com/hfelipeoliveira/AppAcademyChallenge
 
     };
     
