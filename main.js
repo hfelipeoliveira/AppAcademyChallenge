@@ -112,10 +112,56 @@ formulario.addEventListener("submit", function (e) {
             addResultados(resultadoEstadosMenosOcorrencias);
         })();
 
+        //  Gerando e baixando o CSV
+        function converterParaCSV(dados) {
 
-        // Okay, são 23:27 do dia 21, não vai dar tempo...
-        // Mas esta ficando muito legal, vou terminar mesmo assim e deixar no meu Github caso queira ver
-        // https://github.com/hfelipeoliveira/AppAcademyChallenge
+            var CSV = '';
+            var linha = "";
+        
+            //  Adicionando o cabeçalho
+            for (var index in dados[1]) {
+                linha += index + ';';
+            }
+            linha = linha.slice(0, -1);
+            CSV += linha + '\r\n';
+        
+            //  Loop passando em cada candidato
+            for (var i = 1; i < dados.length; i++) {
+                var linha = "";
+                //  Adicionando a coluna
+                for (var index in dados[i]) {
+                    if (index != "Estado") {
+                        linha += dados[i][index] + ';';
+                    } else {
+                        linha += dados[i][index];
+                    }
+                }
+                linha.slice(0, linha.length - 1);
+                CSV += linha + '\r\n';
+            }
+        
+            //  Cria um link para que seja possível fazer o download sem o backend
+            var elementoLinkDownload = document.createElement("a");
+            document.body.appendChild(elementoLinkDownload);
+            blob = new Blob([CSV], { type: 'text/csv' });
+            var URLDownload = window.webkitURL.createObjectURL(blob);
+            elementoLinkDownload.setAttribute('download', 'Sorted_AppAcademy_Candidates.csv');
+            elementoLinkDownload.setAttribute('href', URLDownload);
+            elementoLinkDownload.click();
+            document.body.removeChild(elementoLinkDownload);
+        }
+
+        //  Chama a função converterParaCSV já com os nomes em ordem alfabética
+        converterParaCSV(dados.sort(function (a, b) {
+            if (a.Nome > b.Nome) {
+              return 1;
+            }
+            if (a.Nome < b.Nome) {
+              return -1;
+            }
+            return 0;
+        }));
+
 
     };
     
