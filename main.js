@@ -81,6 +81,22 @@ formulario.addEventListener("submit", function (e) {
             addResultados(resultadoProcentagemCurso);
         }
 
+        //  Exibe o gráfico 🍕
+        (function(){
+            var dadosGrafico = [["Curso", "Numero de inscritos"]];
+            Object.entries(curso).forEach(([key, value]) => dadosGrafico.push([key, value]));
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+            var data = google.visualization.arrayToDataTable(dadosGrafico);
+            var options = {
+            title:'Incrições por curso'
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+            }
+        })();
+
         //  Idade média dos candidatos QA
         (function(){
             const resultadoIdadeMediaQA = "Os candidatos QA tem em média " + (somaIdadeMediaQA/curso['QA']).toFixed() + " anos";
@@ -151,7 +167,7 @@ formulario.addEventListener("submit", function (e) {
             document.body.removeChild(elementoLinkDownload);
         }
 
-        //  Chama a função converterParaCSV já com os nomes em ordem alfabética
+        //  Chama a função converterParaCSV, já com os nomes em ordem alfabética
         converterParaCSV(dados.sort(function (a, b) {
             if (a.Nome > b.Nome) {
               return 1;
