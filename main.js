@@ -1,49 +1,48 @@
-const formulario = document.getElementById("formulario");
-const arquivo = document.getElementById("arquivo");
+formulario.addEventListener("submit", function (e) {
+    const formulario = document.getElementById("formulario");
+    const arquivo = document.getElementById("arquivo");
 
-function conersorParaArray(str){
-    const cabecalho = str.slice(0, str.indexOf("\n")).split(";");
-    const linhas = str.slice(str.indexOf('\n') + 1).split('\n');
+    function conersorParaArray(str){
+        const cabecalho = str.slice(0, str.indexOf("\n")).split(";");
+        const linhas = str.slice(str.indexOf('\n') + 1).split('\n');
 
-    const arr = linhas.map(function (linha) {
-        const values = linha.split(';');
-        const el = cabecalho.reduce(function (object, header, index) {
-            object[header] = values[index];
-            return object;
-        }, {});
-        return el;
-      });
-    
-      return arr;
-}
+        const arr = linhas.map(function (linha) {
+            const values = linha.split(';');
+            const el = cabecalho.reduce(function (object, header, index) {
+                object[header] = values[index];
+                return object;
+            }, {});
+            return el;
+        });
+        
+        return arr;
+    }
 
- //  Função para exibir os resultados na lista
-function addResultados(str){
-    var resultados = document.getElementById("resultados").innerHTML;
-    document.getElementById("resultados").innerHTML = resultados + "<li>"+ str + "</li>";
-}
+    //  Função para exibir os resultados na lista
+    function addResultados(str){
+        var resultados = document.getElementById("resultados").innerHTML;
+        document.getElementById("resultados").innerHTML = resultados + "<li>"+ str + "</li>";
+    }
 
-//  Quem é o professor de Android
-function quemEOProfessor(item){
-    if (item.Vaga != 'Android' && item.Estado == 'SC'){
-        var idadeProfessor = Number(item.Idade.replace(" anos", ""));
-        if(idadeProfessor <= 31 && idadeProfessor >= 21 && (idadeProfessor % 2 == 1)){
-            var partesDoNome = item.Nome.split(" ");
-            if(partesDoNome[0].slice(-1) == "o" && partesDoNome[0].match(/[aeiouy]/gi).length == 3){
-                const resultadoProfessor = "O profesor para a turma de Android é o " + item.Nome;
-                console.log(resultadoProfessor);
-                addResultados(resultadoProfessor);
+    //  Quem é o professor de Android
+    function quemEOProfessor(item){
+        if (item.Vaga != 'Android' && item.Estado == 'SC'){
+            var idadeProfessor = Number(item.Idade.replace(" anos", ""));
+            if(idadeProfessor <= 31 && idadeProfessor >= 21 && (idadeProfessor % 2 == 1)){
+                var partesDoNome = item.Nome.split(" ");
+                if(partesDoNome[0].slice(-1) == "o" && partesDoNome[0].match(/[aeiouy]/gi).length == 3){
+                    const resultadoProfessor = "O profesor para a turma de Android é o " + item.Nome;
+                    console.log(resultadoProfessor);
+                    addResultados(resultadoProfessor);
+                }
             }
         }
     }
-}
 
-// Capta o CSV
-formulario.addEventListener("submit", function (e) {
+    
     e.preventDefault();
     const input = arquivo.files[0];
     const reader = new FileReader();
-
     reader.onload = function (e) {
         const text = e.target.result;
         const dados = conersorParaArray(text);
@@ -169,13 +168,8 @@ formulario.addEventListener("submit", function (e) {
 
         //  Chama a função converterParaCSV, já com os nomes em ordem alfabética
         converterParaCSV(dados.sort(function (a, b) {
-            if (a.Nome > b.Nome) {
-              return 1;
-            }
-            if (a.Nome < b.Nome) {
-              return -1;
-            }
-            return 0;
+            console.log(a.Nome);
+            return a.Nome.localeCompare(b.Nome);
         }));
 
 
